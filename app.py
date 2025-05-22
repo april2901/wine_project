@@ -27,6 +27,8 @@ def add():
         grape_variety = request.form.get('grape_variety', '')
         year = request.form.get('year', '')
         price = request.form.get('price', '')
+        if price:
+            price = int(float(price))
         note = request.form.get('note', '')
         
         conn = get_db()
@@ -99,7 +101,7 @@ if __name__ == '__main__':
         region TEXT,
         grape_variety TEXT,
         year INTEGER,
-        price REAL,
+        price INTEGER,
         note TEXT,
         date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
