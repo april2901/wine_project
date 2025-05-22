@@ -5,7 +5,7 @@ import sqlite3
 app = Flask(__name__)
 
 def get_db():
-    conn = sqlite3.connect('wines.db')
+    conn = sqlite3.connect('wine.db')
     conn.row_factory = sqlite3.Row
     return conn
 
