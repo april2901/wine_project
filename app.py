@@ -9,6 +9,23 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+conn = get_db()
+conn.execute('''
+CREATE TABLE IF NOT EXISTS wine (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    country TEXT,
+    region TEXT,
+    grape_variety TEXT,
+    year INTEGER,
+    price INTEGER,
+    note TEXT,
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+''')
+conn.commit()
+conn.close()
+
 # 홈: 와인 목록 보기
 @app.route('/')
 def index():
@@ -91,20 +108,4 @@ def delete(id):
     return redirect('/')
 
 if __name__ == '__main__':
-    # DB 테이블이 없으면 생성
-    conn = get_db()
-    conn.execute('''
-    CREATE TABLE IF NOT EXISTS wine (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        country TEXT,
-        region TEXT,
-        grape_variety TEXT,
-        year INTEGER,
-        price INTEGER,
-        note TEXT,
-        date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-''')
-    conn.close()
     app.run(debug=True)
