@@ -1,0 +1,32 @@
+<!-- templates/index.html -->
+{% extends "layout.html" %}
+
+{% block header %}내 와인 리스트{% endblock %}
+
+{% block header_buttons %}
+<a href="/add" class="add-button">와인 추가</a>
+{% endblock %}
+
+{% block content %}
+{% if wines %}
+<div class="wine-grid">
+    {% for wine in wines %}
+    <div class="wine-card">
+        <div class="wine-name">{{ wine['name'] }}</div>
+        <div class="wine-info">{{ wine['country'] }}, {{ wine['year'] }}</div>
+        {% if wine['note'] %}
+        <div class="wine-note">"{{ wine['note'] }}"</div>
+        {% endif %}
+        <div class="actions">
+            <a href="/edit/{{ wine['id'] }}" class="edit-link">수정</a>
+            <a href="#" class="delete-link" data-id="{{ wine['id'] }}" data-name="{{ wine['name'] }}">삭제</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="no-wines">
+    <p>등록된 와인이 없습니다. "와인 추가" 버튼을 클릭하여 와인을 추가해보세요.</p>
+</div>
+{% endif %}
+{% endblock %}
