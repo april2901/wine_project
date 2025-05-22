@@ -108,4 +108,20 @@ def delete(id):
     return redirect('/')
 
 if __name__ == '__main__':
+    conn = get_db()
+    conn.execute('''
+    CREATE TABLE IF NOT EXISTS wine (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        country TEXT,
+        region TEXT,
+        grape_variety TEXT,
+        year INTEGER,
+        price INTEGER,
+        note TEXT,
+        date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    ''')
+    conn.commit()
+    conn.close()
     app.run(debug=True)

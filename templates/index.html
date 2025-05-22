@@ -1,13 +1,30 @@
 <!-- templates/index.html -->
 {% extends "layout.html" %}
 
-{% block header %}내 와인 리스트{% endblock %}
+{% block header %}
+  {% if query is defined %}
+    "{{ query }}" 검색 결과
+  {% else %}
+    내 와인 리스트
+  {% endif %}
+{% endblock %}
 
 {% block header_buttons %}
 <a href="/add" class="add-button">와인 추가</a>
+{% if query is defined %}
+<a href="/" class="back-button">전체 목록으로</a>
+{% endif %}
 {% endblock %}
 
 {% block content %}
+<!-- 검색 폼 추가 -->
+<div class="search-container">
+  <form action="/search" method="GET" class="search-form">
+    <input type="text" name="query" placeholder="와인 이름, 국가 검색..." value="{{ query if query is defined else '' }}">
+    <button type="submit" class="search-button">검색</button>
+  </form>
+</div>
+
 {% if wines %}
 <div class="wine-grid">
     {% for wine in wines %}
@@ -65,7 +82,12 @@
 </div>
 {% else %}
 <div class="no-wines">
+    {% if query is defined %}
+    <p>"{{ query }}" 검색 결과가 없습니다.</p>
+    <a href="/">전체 와인 목록 보기</a>
+    {% else %}
     <p>등록된 와인이 없습니다. "와인 추가" 버튼을 클릭하여 와인을 추가해보세요.</p>
+    {% endif %}
 </div>
 {% endif %}
 {% endblock %}
