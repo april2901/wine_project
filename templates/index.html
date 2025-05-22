@@ -13,10 +13,49 @@
     {% for wine in wines %}
     <div class="wine-card">
         <div class="wine-name">{{ wine['name'] }}</div>
-        <div class="wine-info">{{ wine['country'] }}, {{ wine['year'] }}</div>
+        
+        <div class="wine-details">
+            <!-- 기본 정보 -->
+            <div class="wine-info">
+                <span class="info-label">국가:</span> {{ wine['country'] }}
+                {% if wine['region'] %}
+                    <span class="info-divider">|</span> <span class="info-label">지역:</span> {{ wine['region'] }}
+                {% endif %}
+            </div>
+            
+            <!-- 추가 정보 -->
+            <div class="wine-info">
+                {% if wine['year'] %}
+                    <span class="info-label">생산년도:</span> {{ wine['year'] }}
+                {% endif %}
+                
+                {% if wine['grape_variety'] %}
+                    <span class="info-divider">|</span> <span class="info-label">포도품종:</span> {{ wine['grape_variety'] }}
+                {% endif %}
+            </div>
+            
+            <!-- 가격 정보 -->
+            {% if wine['price'] %}
+            <div class="wine-price">
+                <span class="info-label">가격:</span> {{ "{:,}".format(wine['price']) }}원
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- 메모 -->
         {% if wine['note'] %}
-        <div class="wine-note">"{{ wine['note'] }}"</div>
+        <div class="wine-note">
+            <span class="note-icon">📝</span> "{{ wine['note'] }}"
+        </div>
         {% endif %}
+        
+        <!-- 추가 날짜 -->
+        {% if wine['date_added'] %}
+        <div class="wine-date">
+            추가일: {{ wine['date_added'].split()[0] }}
+        </div>
+        {% endif %}
+        
         <div class="actions">
             <a href="/edit/{{ wine['id'] }}" class="edit-link">수정</a>
             <a href="#" class="delete-link" data-id="{{ wine['id'] }}" data-name="{{ wine['name'] }}">삭제</a>
