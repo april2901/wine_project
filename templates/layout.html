@@ -11,8 +11,27 @@
 <body>
     <div class="header">
         <h1>{% block header %}내 와인 셀러{% endblock %}</h1>
-        {% block header_buttons %}{% endblock %}
+        <div class="header-right">
+            {% block header_buttons %}{% endblock %}
+            {% if session.logged_in %}
+                <span class="user-info">{{ session.username }}님</span>
+                <a href="{{ url_for('logout') }}" class="logout-button">로그아웃</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="login-button">로그인</a>
+            {% endif %}
+        </div>
     </div>
+    
+    <!-- 플래시 메시지 표시 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
     
     <div class="content">
         {% block content %}{% endblock %}
