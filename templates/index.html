@@ -85,7 +85,7 @@
                 {% if session.logged_in %}
                 <div class="actions">
                     <a href="{{ url_for('edit_wine', wine_id=wine[0]) }}" class="edit-link">수정</a>
-                    <a href="#" onclick="deleteWine({{ wine[0] }})" class="delete-link">삭제</a>
+                    <a href="#" onclick="deleteWine('{{ wine[0] }}')" class="delete-link">삭제</a>
                 </div>
                 {% endif %}
             </div>
