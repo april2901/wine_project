@@ -1,101 +1,250 @@
-/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f5f5f5;
+/* ===== RESET & BASE STYLES ===== */
+* {
+    box-sizing: border-box;
 }
 
-/* Header Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 10px;
+    background-color: #f5f5f5;
+    line-height: 1.6;
+}
+
+/* ===== HEADER STYLES ===== */
 .header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 15px;
     margin-bottom: 20px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.add-button {
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #8e2de2;
+    text-align: center;
+}
+
+.header-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.user-info {
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* ===== SEARCH STYLES ===== */
+.search-container {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.search-form {
+    display: flex;
+    width: 100%;
+}
+
+.search-form input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px 0 0 6px;
+    font-size: 16px; /* iOS 줌 방지 */
+}
+
+.search-button {
+    padding: 12px 16px;
     background-color: #8e2de2;
     color: white;
-    padding: 10px 15px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
+    border: none;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
 }
 
-/* Wine Grid and Cards */
+.search-button:hover {
+    background-color: #7b29c7;
+}
+
+/* ===== BUTTON STYLES ===== */
+.add-button, 
+.login-button, 
+.logout-button, 
+.back-button,
+.submit-button {
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    text-align: center;
+    min-width: 80px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.add-button,
+.login-button,
+.submit-button {
+    background-color: #8e2de2;
+    color: white;
+}
+
+.add-button:hover,
+.login-button:hover,
+.submit-button:hover {
+    background-color: #7b29c7;
+}
+
+.logout-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.logout-button:hover {
+    background-color: #d32f2f;
+}
+
+.back-button,
+.cancel-link {
+    background-color: #f0f0f0;
+    color: #333;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.back-button:hover,
+.cancel-link:hover {
+    background-color: #e0e0e0;
+}
+
+/* ===== WINE GRID & CARDS ===== */
 .wine-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr; /* 모바일에서는 1열 */
+    gap: 15px;
 }
 
 .wine-card {
     background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     padding: 20px;
     position: relative;
+    border-left: 4px solid #8e2de2;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wine-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .wine-name {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 12px;
     color: #8e2de2;
+    line-height: 1.3;
+}
+
+.wine-details {
+    margin: 15px 0;
 }
 
 .wine-info {
+    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 1.4;
     color: #666;
-    margin-bottom: 10px;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.wine-price {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #8e2de2;
+    font-size: 16px;
 }
 
 .wine-note {
-    color: #333;
-    margin-top: 10px;
+    margin-top: 15px;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-left: 3px solid #8e2de2;
     font-style: italic;
+    color: #555;
+    border-radius: 0 6px 6px 0;
 }
 
-/* Action Buttons */
+.wine-date {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #999;
+    text-align: right;
+}
+
+/* ===== ACTION BUTTONS ===== */
 .actions {
     display: flex;
-    justify-content: flex-end;
+    gap: 10px;
     margin-top: 15px;
+    justify-content: flex-end;
 }
 
-.edit-link, .delete-link {
-    padding: 5px 10px;
-    margin-left: 10px;
+.edit-link, 
+.delete-link {
+    padding: 8px 16px;
+    border-radius: 6px;
     text-decoration: none;
-    border-radius: 4px;
     font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
 }
 
 .edit-link {
-    background-color: #f0f0f0;
-    color: #333;
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.edit-link:hover {
+    background-color: #bbdefb;
 }
 
 .delete-link {
     background-color: #ffebee;
-    color: #e53935;
+    color: #d32f2f;
 }
 
-/* Empty State */
-.no-wines {
-    text-align: center;
-    color: #666;
-    padding: 40px;
+.delete-link:hover {
+    background-color: #ffcdd2;
 }
 
-/* Form Styles */
+/* ===== FORM STYLES ===== */
 .form-container {
     max-width: 600px;
     margin: 0 auto;
     background-color: white;
     padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .form-group {
@@ -104,178 +253,162 @@ body {
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 16px;
+    transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #8e2de2;
+    box-shadow: 0 0 0 2px rgba(142, 45, 226, 0.1);
 }
 
 .form-group textarea {
     height: 100px;
+    resize: vertical;
 }
 
 .form-buttons {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 30px;
-}
-
-.submit-button {
-    background-color: #8e2de2;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.cancel-link {
-    color: #666;
-    text-decoration: none;
-    padding: 10px 20px;
-}
-
-/* static/css/style.css에 추가 */
-.search-container {
-    margin-bottom: 20px;
-}
-
-.search-form {
-    display: flex;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.search-form input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 0 4px;
-    font-size: 16px;
-}
-
-.search-button {
-    padding: 10px 15px;
-    background-color: #8e2de2;
-    color: white;
-    border: none;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-}
-
-.back-button {
-    margin-left: 10px;
-    background-color: #f0f0f0;
-    color: #333;
-    padding: 10px 15px;
-    text-decoration: none;
-    border-radius: 4px;
-}
-
-/* static/css/style.css에 추가 */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
     gap: 15px;
 }
 
-.user-info {
-    color: #666;
-    font-size: 14px;
-}
-
-.logout-button {
-    background-color: #f44336;
-    color: white;
-    padding: 8px 12px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
+/* ===== FLASH MESSAGES ===== */
 .flash-messages {
     margin-bottom: 20px;
 }
 
-.flash-error {
-    background-color: #ffebee;
-    color: #c62828;
-    padding: 10px;
-    border-radius: 4px;
+.flash-success, 
+.flash-error, 
+.flash-info {
+    padding: 12px 16px;
+    border-radius: 6px;
     margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .flash-success {
     background-color: #e8f5e8;
     color: #2e7d32;
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 10px;
+    border-left: 4px solid #4caf50;
+}
+
+.flash-error {
+    background-color: #ffebee;
+    color: #c62828;
+    border-left: 4px solid #f44336;
 }
 
 .flash-info {
     background-color: #e3f2fd;
     color: #1565c0;
-    padding: 10px;
-    border-radius: 4px;
+    border-left: 4px solid #2196f3;
+}
+
+/* ===== EMPTY STATE ===== */
+.no-wines {
+    text-align: center;
+    color: #666;
+    padding: 60px 20px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.no-wines h3 {
     margin-bottom: 10px;
-}
-/* static/css/style.css에 추가 */
-.login-button {
-    background-color: #8e2de2;
-    color: white;
-    padding: 8px 12px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 14px;
+    color: #8e2de2;
 }
 
-.search-container {
-    margin-right: 15px;
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* 태블릿 이상 (768px+) */
+@media (min-width: 768px) {
+    body {
+        padding: 20px;
+    }
+    
+    .header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .header h1 {
+        text-align: left;
+    }
+    
+    .header-right {
+        justify-content: flex-end;
+    }
+    
+    .search-container {
+        width: auto;
+        margin-bottom: 0;
+        margin-right: 15px;
+    }
+    
+    .search-form input {
+        width: 250px;
+    }
+    
+    .wine-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .form-buttons {
+        flex-direction: row;
+    }
 }
 
-.search-form {
-    display: flex;
+/* 데스크톱 (1024px+) */
+@media (min-width: 1024px) {
+    .wine-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .search-form input {
+        width: 300px;
+    }
 }
 
-.search-form input {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 0 4px;
-    font-size: 14px;
-    width: 200px;
+/* 큰 화면 (1400px+) */
+@media (min-width: 1400px) {
+    .wine-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
-.search-button {
-    padding: 8px 12px;
-    background-color: #8e2de2;
-    color: white;
-    border: none;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.back-button {
-    background-color: #f0f0f0;
-    color: #333;
-    padding: 8px 12px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 14px;
+/* 모바일에서 폼 버튼 세로 배치 */
+@media (max-width: 767px) {
+    .form-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .submit-button,
+    .cancel-link {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .actions {
+        justify-content: center;
+    }
 }
