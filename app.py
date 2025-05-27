@@ -53,6 +53,9 @@ def init_db():
     conn.commit()
     conn.close()
 
+
+init_db()
+
 @app.route('/')
 def index():
     search_query = request.args.get('search', '')
