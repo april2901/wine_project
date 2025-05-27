@@ -412,3 +412,77 @@ body {
         justify-content: center;
     }
 }
+
+.wine-location {
+    margin-top: 8px;
+    padding: 6px 10px;
+    background-color: #e8f5e8;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #2e7d32;
+    border-left: 3px solid #4caf50;
+}
+
+.view-toggle {
+    display: flex;
+    gap: 10px;
+    margin-right: 15px;
+}
+
+.view-button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    background-color: #f0f0f0;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.view-button.active {
+    background-color: #8e2de2;
+    color: white;
+}
+
+.view-button:hover:not(.active) {
+    background-color: #e0e0e0;
+}
+
+/* 모바일에서 뷰 토글 스타일 */
+@media (max-width: 768px) {
+    .view-toggle {
+        margin-right: 0;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    
+    .view-button {
+        flex: 1;
+        text-align: center;
+    }
+}
+.guest-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.guest-text {
+    color: #666;
+    font-size: 14px;
+    font-style: italic;
+}
+
+.login-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.login-button:hover {
+    background-color: #45a049;
+}

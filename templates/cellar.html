@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>와인 셀러 - 내 와인 리스트</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cellar.css') }}">
+</head>
+<body>
+    <!-- 플래시 메시지 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- 헤더 -->
+    <div class="header">
+        <h1>🍷 내 와인 셀러</h1>
+        <div class="header-right">
+            <div class="view-toggle">
+                <a href="{{ url_for('index') }}" class="view-button">📋 리스트 모드</a>
+                <span class="view-button active">🏠 셀러 모드</span>
+            </div>
+            {% if session.logged_in %}
+                <span class="user-info">{{ session.username }}님 환영합니다</span>
+                <a href="{{ url_for('add_wine') }}" class="add-button">+ 와인 추가</a>
+                <a href="{{ url_for('logout') }}" class="logout-button">로그아웃</a>
+            {% else %}
+                <div class="guest-info">
+                    <span class="guest-text">게스트 모드 (보기 전용)</span>
+                    <a href="{{ url_for('login') }}" class="login-button">로그인</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="cellar-container">
+        <!-- 셀러 이미지 및 선반 오버레이 -->
+        <div class="cellar-image-container" id="cellarContainer">
+            <!-- 실제 셀러 이미지 사용 -->
+            <img src="{{ url_for('static', filename='images/cellar.png') }}" 
+                 alt="와인 셀러" class="cellar-image" id="cellarImage">
+            
+            <!-- 선반 오버레이 - 세로로 중앙 배치 -->
+            <div class="shelves-overlay">
+                {% for shelf in cellar_data %}
+                <div class="shelf-indicator shelf-{{ shelf.shelf_number }}" 
+                     data-shelf="{{ shelf.shelf_number }}"
+                     onclick="selectShelf({{ shelf.shelf_number }})">
+                    <div class="shelf-number">선반 {{ shelf.shelf_number }}</div>
+                    <div class="shelf-count">
+                        <span class="count">{{ shelf.wine_count }}</span>
+                        <span class="capacity">/{{ shelf.max_capacity }}</span>
+                    </div>
+                    {% if shelf.is_full %}
+                    <div class="full-indicator">FULL</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 선반 상세 정보 -->
+        <div class="shelf-detail" id="shelfDetail" style="display: none;">
+            <div class="shelf-header">
+                <h3 id="shelfTitle">선반 1</h3>
+                <button class="close-detail" onclick="closeShelfDetail()">✕</button>
+            </div>
+            
+            <div class="shelf-wines" id="shelfWines">
+                <!-- 와인 목록이 여기에 동적으로 로드됩니다 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/cellar.js') }}"></script>
+</body>
+</html>

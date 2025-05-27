@@ -1,49 +1,87 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>와인 추가 - 내 와인 리스트</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
-{% block header %}와인 추가{% endblock %}
+    <div class="form-container">
+        <h1>🍷 새 와인 추가</h1>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label for="name">와인 이름:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="country">국가:</label>
+                <input type="text" id="country" name="country" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="region">지역:</label>
+                <input type="text" id="region" name="region">
+            </div>
+            
+            <div class="form-group">
+                <label for="year">생산연도:</label>
+                <input type="number" id="year" name="year" min="1800" max="2030">
+            </div>
+            
+            <div class="form-group">
+                <label for="grape_variety">포도품종:</label>
+                <input type="text" id="grape_variety" name="grape_variety">
+            </div>
+            
+            <div class="form-group">
+                <label for="price">가격 (원):</label>
+                <input type="number" id="price" name="price" min="0">
+            </div>
 
-{% block content %}
-<div class="form-container">
-    <form method="POST">
-        <div class="form-group">
-            <label for="name">와인 이름:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="country">국가:</label>
-            <input type="text" id="country" name="country">
-        </div>
-        
-        <div class="form-group">
-            <label for="region">지역:</label>
-            <input type="text" id="region" name="region" placeholder="예: 보르도, 나파 밸리">
-        </div>
-        
-        <div class="form-group">
-            <label for="grape_variety">포도 품종:</label>
-            <input type="text" id="grape_variety" name="grape_variety" placeholder="예: 카베르네 소비뇽, 샤르도네">
-        </div>
-        
-        <div class="form-group">
-            <label for="year">생산 연도:</label>
-            <input type="number" id="year" name="year" min="1900" max="2099">
-        </div>
-        
-        <div class="form-group">
-            <label for="price">가격:</label>
-            <input type="number" id="price" name="price" min="0" placeholder="예: 35000">
-        </div>
-        
-        <div class="form-group">
-            <label for="note">메모:</label>
-            <textarea id="note" name="note" placeholder="이 와인에 대한 메모나 느낌을 적어주세요"></textarea>
-        </div>
-        
-        <div class="form-buttons">
-            <button type="submit" class="submit-button">저장</button>
-            <a href="/" class="cancel-link">취소</a>
-        </div>
-    </form>
-</div>
-{% endblock %}
+            <!-- 새로 추가된 위치 선택 필드들 -->
+            <div class="form-group">
+                <label for="shelf_number">선반 번호 (선택사항):</label>
+                <select id="shelf_number" name="shelf_number">
+                    <option value="">선반 선택</option>
+                    {% for i in range(1, 11) %}
+                    <option value="{{ i }}">선반 {{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="position_in_shelf">선반 내 위치 (1-8, 선택사항):</label>
+                <select id="position_in_shelf" name="position_in_shelf">
+                    <option value="">위치 선택</option>
+                    {% for i in range(1, 9) %}
+                    <option value="{{ i }}">위치 {{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="notes">메모:</label>
+                <textarea id="notes" name="notes" placeholder="와인에 대한 개인적인 메모나 평가를 입력하세요"></textarea>
+            </div>
+            
+            <div class="form-buttons">
+                <button type="submit" class="submit-button">와인 추가</button>
+                <a href="{{ url_for('index') }}" class="cancel-link">취소</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

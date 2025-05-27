@@ -1,105 +1,127 @@
-<!-- templates/index.html -->
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 와인 리스트</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- 플래시 메시지 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
-{% block header %}
-  {% if query is defined %}
-    "{{ query }}" 검색 결과
-  {% else %}
-    내 와인 리스트
-  {% endif %}
-{% endblock %}
-
-{% block header_buttons %}
-<!-- 검색 폼 -->
-<div class="search-container">
-  <form action="/search" method="GET" class="search-form">
-    <input type="text" name="query" placeholder="와인 이름, 국가 검색..." value="{{ query if query is defined else '' }}">
-    <button type="submit" class="search-button">검색</button>
-  </form>
-</div>
-
-<!-- 로그인한 사용자만 와인 추가 버튼 표시 -->
-{% if session.logged_in %}
-<a href="/add" class="add-button">와인 추가</a>
-{% endif %}
-
-{% if query is defined %}
-<a href="/" class="back-button">전체 목록으로</a>
-{% endif %}
-{% endblock %}
-
-{% block content %}
-{% if wines %}
-<div class="wine-grid">
-    {% for wine in wines %}
-    <div class="wine-card">
-        <div class="wine-name">{{ wine['name'] }}</div>
-        
-        <div class="wine-details">
-            <!-- 기본 정보 -->
-            <div class="wine-info">
-                <span class="info-label">국가:</span> {{ wine['country'] }}
-                {% if wine['region'] %}
-                    <span class="info-divider">|</span> <span class="info-label">지역:</span> {{ wine['region'] }}
-                {% endif %}
+    <!-- 헤더 -->
+    <div class="header">
+        <h1>🍷 내 와인 리스트</h1>
+        <div class="header-right">
+            <div class="view-toggle">
+                <span class="view-button active">📋 리스트 모드</span>
+                <!-- 로그인 상태와 관계없이 셀러 모드 버튼 표시 -->
+                <a href="{{ url_for('cellar_view') }}" class="view-button">🏠 셀러 모드</a>
             </div>
             
-            <!-- 추가 정보 -->
-            <div class="wine-info">
-                {% if wine['year'] %}
-                    <span class="info-label">생산년도:</span> {{ wine['year'] }}
-                {% endif %}
-                
-                {% if wine['grape_variety'] %}
-                    <span class="info-divider">|</span> <span class="info-label">포도품종:</span> {{ wine['grape_variety'] }}
-                {% endif %}
+            <div class="search-container">
+                <form method="GET" class="search-form">
+                    <input type="text" name="search" placeholder="와인 이름, 국가, 지역, 품종..." value="{{ search_query }}">
+                    <button type="submit" class="search-button">검색</button>
+                </form>
             </div>
             
-            <!-- 가격 정보 -->
-            {% if wine['price'] %}
-            <div class="wine-price">
-                <span class="info-label">가격:</span> {{ "{:,}".format(wine['price']) }}원
-            </div>
+            {% if session.logged_in %}
+                <span class="user-info">{{ session.username }}님 환영합니다</span>
+                <a href="{{ url_for('add_wine') }}" class="add-button">+ 와인 추가</a>
+                <a href="{{ url_for('logout') }}" class="logout-button">로그아웃</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="login-button">로그인</a>
             {% endif %}
         </div>
-        
-        <!-- 메모 -->
-        {% if wine['note'] %}
-        <div class="wine-note">
-            <span class="note-icon">📝</span> "{{ wine['note'] }}"
-        </div>
-        {% endif %}
-        
-        <!-- 추가 날짜 -->
-        {% if wine['date_added'] %}
-        <div class="wine-date">
-            추가일: {{ wine['date_added'].split()[0] }}
-        </div>
-        {% endif %}
-        
-        <!-- 로그인한 사용자만 편집/삭제 버튼 표시 -->
-        {% if session.logged_in %}
-        <div class="actions">
-            <a href="/edit/{{ wine['id'] }}" class="edit-link">수정</a>
-            <a href="#" class="delete-link" data-id="{{ wine['id'] }}" data-name="{{ wine['name'] }}">삭제</a>
-        </div>
-        {% endif %}
     </div>
-    {% endfor %}
-</div>
-{% else %}
-<div class="no-wines">
-    {% if query is defined %}
-    <p>"{{ query }}" 검색 결과가 없습니다.</p>
-    <a href="/">전체 와인 목록 보기</a>
+
+    <!-- 와인 목록 -->
+    {% if wines %}
+        <div class="wine-grid">
+            {% for wine in wines %}
+            <div class="wine-card">
+                <div class="wine-name">{{ wine[1] }}</div>
+                
+                <div class="wine-details">
+                    <div class="wine-info">
+                        <span class="info-label">국가:</span> {{ wine[2] or 'N/A' }} | 
+                        <span class="info-label">지역:</span> {{ wine[3] or 'N/A' }}
+                    </div>
+                    <div class="wine-info">
+                        <span class="info-label">연도:</span> {{ wine[4] or 'N/A' }} | 
+                        <span class="info-label">품종:</span> {{ wine[5] or 'N/A' }}
+                    </div>
+                    
+                    {% if wine[6] %}
+                    <div class="wine-price">{{ "{:,}".format(wine[6]|int) }}원</div>
+                    {% endif %}
+                    
+                    <!-- 위치 정보 표시 -->
+                    {% if wine|length > 9 and wine[9] %}
+                    <div class="wine-location">
+                        <span class="info-label">위치:</span> 
+                        선반 {{ wine[9] }}
+                        {% if wine[10] %} - 위치 {{ wine[10] }}{% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {% if wine[7] %}
+                <div class="wine-note">"{{ wine[7] }}"</div>
+                {% endif %}
+                
+                <div class="wine-date">추가일: {{ wine[8] }}</div>
+                
+                {% if session.logged_in %}
+                <div class="actions">
+                    <a href="{{ url_for('edit_wine', wine_id=wine[0]) }}" class="edit-link">수정</a>
+                    <a href="#" onclick="deleteWine({{ wine[0] }})" class="delete-link">삭제</a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
     {% else %}
-    <p>등록된 와인이 없습니다.</p>
-    {% if session.logged_in %}
-        <a href="/add">"와인 추가" 버튼을 클릭하여 와인을 추가해보세요.</a>
-    {% else %}
-        <p>와인을 추가하려면 <a href="/login">로그인</a>이 필요합니다.</p>
+        <div class="no-wines">
+            <h3>아직 등록된 와인이 없습니다.</h3>
+            <p>첫 번째 와인을 추가해보세요!</p>
+            {% if session.logged_in %}
+            <a href="{{ url_for('add_wine') }}" class="add-button">와인 추가하기</a>
+            {% else %}
+            <p><a href="{{ url_for('login') }}" class="login-button">로그인</a>하여 와인을 추가할 수 있습니다.</p>
+            {% endif %}
+        </div>
     {% endif %}
-    {% endif %}
-</div>
-{% endif %}
-{% endblock %}
+
+    <script>
+        function deleteWine(wineId) {
+            if (confirm('정말로 이 와인을 삭제하시겠습니까?')) {
+                fetch(`/delete/${wineId}`, {
+                    method: 'POST',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('삭제 중 오류가 발생했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('삭제 중 오류가 발생했습니다.');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

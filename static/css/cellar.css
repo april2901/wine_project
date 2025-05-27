@@ -1,0 +1,482 @@
+/* ===== CELLAR SPECIFIC STYLES ===== */
+
+.view-toggle {
+    display: flex;
+    gap: 10px;
+    margin-right: 15px;
+}
+
+.view-button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    background-color: #f0f0f0;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.view-button.active {
+    background-color: #8e2de2;
+    color: white;
+}
+
+.view-button:hover:not(.active) {
+    background-color: #e0e0e0;
+}
+
+.cellar-container {
+    display: flex;
+    gap: 20px;
+    height: calc(100vh - 120px);
+    align-items: flex-start;
+}
+
+/* ===== CELLAR IMAGE CONTAINER ===== */
+.cellar-image-container {
+    position: relative;
+    flex: 0 0 auto;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    
+    /* 세로 이미지 비율 유지 (171:431) - 반응형 */
+    width: 20vw;
+    height: 50.4vw; /* 비율에 맞는 높이 (20vw * 431/171) */
+    max-height: calc(100vh - 140px);
+    min-width: 250px;
+    min-height: 630px;
+}
+
+.cellar-image-container.compact {
+    width: 15vw;
+    height: 37.8vw; /* 비율에 맞는 높이 (15vw * 431/171) */
+    min-width: 180px;
+    min-height: 454px;
+}
+
+/* 실제 셀러 이미지 스타일 */
+.cellar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+/* ===== SHELF OVERLAYS ===== */
+.shelves-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.8vh;  /* 버튼 간격 줄임 */
+    padding: 8vh 1.5vw;  /* 상하단 여백 늘림 (3vh → 8vh) */
+}
+
+.shelf-indicator {
+    position: relative;
+    background-color: rgba(142, 45, 226, 0.9);
+    color: white;
+    border-radius: 6px;  /* 모서리 둥글기 줄임 */
+    padding: 0.5vh 0.8vw;  /* 가로세로 패딩 줄임 */
+    cursor: pointer;
+    pointer-events: all;
+    transition: all 0.2s ease;
+    min-width: 4.5vw;  /* 최소 너비 줄임 */
+    width: 6vw;  /* 너비 줄임 */
+    text-align: center;
+    backdrop-filter: blur(2px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.shelf-indicator:hover {
+    background-color: rgba(142, 45, 226, 1);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(142, 45, 226, 0.6);
+}
+
+.shelf-indicator.selected {
+    background-color: rgba(255, 193, 7, 0.9);
+    border: 2px solid #ffc107;
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(255, 193, 7, 0.7);
+}
+
+.shelf-number {
+    font-size: 0.7vw;
+    opacity: 0.9;
+    margin-bottom: 0.3vh;
+    min-font-size: 10px;
+}
+
+.shelf-count {
+    font-weight: bold;
+    font-size: 0.9vw;
+    line-height: 1;
+}
+
+.count {
+    font-size: 1.2vw;
+}
+
+.capacity {
+    font-size: 0.8vw;
+    opacity: 0.8;
+}
+
+.full-indicator {
+    font-size: 0.6vw;
+    background-color: #f44336;
+    padding: 0.2vh 0.4vw;
+    border-radius: 4px;
+    margin-top: 0.3vh;
+    min-font-size: 8px;
+}
+
+/* 컴팩트 모드에서 버튼도 함께 축소 */
+.cellar-image-container.compact .shelf-indicator {
+    padding: 0.3vh 0.6vw;  /* 컴팩트 모드에서 더 작게 */
+    min-width: 3.5vw;
+    width: 4.5vw;
+    gap: 0.5vh;
+}
+
+.cellar-image-container.compact .shelf-number {
+    font-size: 0.5vw;
+    margin-bottom: 0.2vh;
+}
+
+.cellar-image-container.compact .shelf-count {
+    font-size: 0.7vw;
+}
+
+.cellar-image-container.compact .count {
+    font-size: 0.9vw;
+}
+
+.cellar-image-container.compact .capacity {
+    font-size: 0.6vw;
+}
+
+.cellar-image-container.compact .full-indicator {
+    font-size: 0.4vw;
+    padding: 0.1vh 0.3vw;
+    margin-top: 0.2vh;
+}
+
+/* ===== SHELF DETAIL PANEL ===== */
+.shelf-detail {
+    flex: 1;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+    overflow-y: auto;
+    max-height: calc(100vh - 140px);
+}
+
+.shelf-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #8e2de2;
+}
+
+.shelf-header h3 {
+    margin: 0;
+    color: #8e2de2;
+    font-size: 20px;
+}
+
+.close-detail {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.close-detail:hover {
+    background-color: #f0f0f0;
+}
+
+.shelf-wines {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.shelf-wine-card {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    border-left: 4px solid #8e2de2;
+    position: relative;
+}
+
+.shelf-wine-card .wine-name {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #8e2de2;
+    font-weight: bold;
+}
+
+.shelf-wine-card .wine-info {
+    font-size: 13px;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.shelf-wine-card .wine-price {
+    font-weight: bold;
+    color: #8e2de2;
+    margin-top: 8px;
+}
+
+.shelf-wine-card .wine-note {
+    margin-top: 10px;
+    padding: 8px;
+    background-color: #e8f5e8;
+    border-radius: 4px;
+    font-style: italic;
+    color: #555;
+    font-size: 12px;
+}
+
+.shelf-wine-card .actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    justify-content: flex-end;
+}
+
+.shelf-wine-card .edit-link,
+.shelf-wine-card .delete-link {
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.shelf-wine-card .edit-link {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.shelf-wine-card .delete-link {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.position-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #8e2de2;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.empty-shelf {
+    text-align: center;
+    color: #666;
+    padding: 40px 20px;
+    font-style: italic;
+}
+
+.empty-shelf .add-button {
+    margin-top: 15px;
+    display: inline-block;
+}
+
+.loading {
+    text-align: center;
+    color: #8e2de2;
+    padding: 20px;
+    font-style: italic;
+}
+
+.error {
+    text-align: center;
+    color: #f44336;
+    padding: 20px;
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .guest-info {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 5px;
+        text-align: center;
+    }
+    
+    .guest-text {
+        font-size: 12px;
+    }
+    .cellar-container {
+        flex-direction: column;
+        height: auto;
+        gap: 15px;
+    }
+    
+    .cellar-image-container {
+        width: 100%;
+        /* 이미지 비율에 맞는 높이 계산 (171:431 비율) */
+        height: calc(100vw * 431 / 171);  /* 비율 유지 */
+        max-height: 80vh;  /* 최대 높이 제한 */
+        min-width: auto;
+        min-height: auto;
+        overflow-y: auto;  /* 세로 스크롤 허용 */
+    }
+    
+    .cellar-image-container.compact {
+        height: calc(100vw * 431 / 171 * 0.7);  /* 70% 크기 */
+        max-height: 60vh;
+    }
+    
+    /* 모바일에서 이미지 비율 유지 */
+    .cellar-image {
+        object-fit: contain;  /* cover에서 contain으로 되돌림 */
+        object-position: center;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .shelves-overlay {
+        padding: 2vh 1vw;  /* 패딩 더 줄임 */
+        gap: 0.5vh;        /* 버튼 간격 더 줄임 */
+        overflow-y: auto;  /* 스크롤 허용 */
+    }
+    
+    .shelf-indicator {
+        min-width: 8vw;    /* 버튼 크기 더 줄임 */
+        width: 12vw;
+        padding: 0.6vh 1.2vw;  /* 패딩 더 줄임 */
+        border-radius: 4px;    /* 모서리 더 작게 */
+    }
+    
+    .shelf-number {
+        font-size: 2vw;    /* 폰트 더 작게 */
+        margin-bottom: 0.1vh;
+    }
+    
+    .shelf-count {
+        font-size: 2.2vw;
+    }
+    
+    .count {
+        font-size: 2.8vw;
+    }
+    
+    .capacity {
+        font-size: 1.8vw;
+    }
+    
+    .full-indicator {
+        font-size: 1.5vw;
+        padding: 0.2vh 0.5vw;
+        margin-top: 0.1vh;
+    }
+    
+    .cellar-image-container.compact .shelf-indicator {
+        min-width: 6vw;
+        width: 9vw;
+        padding: 0.4vh 0.8vw;
+    }
+    
+    .cellar-image-container.compact .shelf-number {
+        font-size: 1.5vw;
+    }
+    
+    .cellar-image-container.compact .shelf-count {
+        font-size: 1.8vw;
+    }
+    
+    .cellar-image-container.compact .count {
+        font-size: 2.2vw;
+    }
+    
+    .cellar-image-container.compact .capacity {
+        font-size: 1.4vw;
+    }
+    
+    .shelf-detail {
+        flex: none;
+        max-height: 50vh;
+    }
+    
+    .view-toggle {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    .header-right {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cellar-image-container {
+        height: calc(100vw * 431 / 171);
+        max-height: 75vh;
+    }
+    
+    .cellar-image-container.compact {
+        height: calc(100vw * 431 / 171 * 0.6);
+        max-height: 50vh;
+    }
+    
+    .shelves-overlay {
+        padding: 1.5vh 0.5vw;
+        gap: 0.6vh;  /* 간격 최소화 */
+    }
+    
+    .shelf-indicator {
+        min-width: 6vw;
+        width: 15vw;
+        padding: 0.4vh 0.8vw;
+    }
+    
+    .shelf-number {
+        font-size: 3vw;
+    }
+    
+    .shelf-count {
+        font-size: 4vw;
+    }
+    
+    .count {
+        font-size: 3vw;
+    }
+    
+    .capacity {
+        font-size: 3vw;
+    }
+    
+    .cellar-image-container.compact .shelf-indicator {
+        min-width: 5vw;
+        width: 8vw;
+        padding: 0.3vh 0.6vw;
+    }
+}
