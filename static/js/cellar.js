@@ -72,7 +72,7 @@ function displayShelfWines(wines, shelfNumber) {
             </div>
         ` : '';
         
-        const wineType = wine.type;
+        const wineType = Number(wine.type);
         let wineCardClass = 'shelf-wine-card';
         if (wineType === 1) wineCardClass = 'shelf-wine-card-red';
         else if (wineType === 2) wineCardClass = 'shelf-wine-card-white';
