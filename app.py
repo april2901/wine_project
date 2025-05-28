@@ -53,7 +53,7 @@ def init_db():
             cursor.execute('ALTER TABLE wines ADD COLUMN position_in_shelf INTEGER')
             print("position_in_shelf 컬럼이 추가되었습니다.")
         
-        if 'position_in_shelf' not in columns:
+        if 'wine_type' not in columns:
             cursor.execute('ALTER TABLE wines ADD COLUMN wine_type INTEGER')
             print("wine_type 컬럼이 추가되었습니다.")
     
