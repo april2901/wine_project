@@ -220,11 +220,25 @@
     gap: 15px;
 }
 
-.shelf-wine-card {
+.shelf-wine-card-red {
     background-color: #f8f9fa;
     border-radius: 8px;
     padding: 15px;
-    border-left: 4px solid #8e2de2;
+    border-left: 4px solid #b71c1c;
+    position: relative;
+}
+.shelf-wine-card-white {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    border-left: 4px solid #ffd600;
+    position: relative;
+}
+.shelf-wine-card-sparkling {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    border-left: 4px solid #f5ec9d;
     position: relative;
 }
 

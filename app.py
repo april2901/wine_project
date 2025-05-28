@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 import sqlite3
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key'
@@ -31,7 +33,8 @@ def init_db():
                 notes TEXT,
                 date_added TEXT,
                 shelf_number INTEGER,
-                position_in_shelf INTEGER
+                position_in_shelf INTEGER,
+                wine_type INTEGER
             )
         ''')
         print("wines 테이블이 생성되었습니다.")
@@ -49,6 +52,10 @@ def init_db():
         if 'position_in_shelf' not in columns:
             cursor.execute('ALTER TABLE wines ADD COLUMN position_in_shelf INTEGER')
             print("position_in_shelf 컬럼이 추가되었습니다.")
+        
+        if 'position_in_shelf' not in columns:
+            cursor.execute('ALTER TABLE wines ADD COLUMN wine_type INTEGER')
+            print("wine_type 컬럼이 추가되었습니다.")
     
     conn.commit()
     conn.close()
@@ -65,14 +72,14 @@ def index():
     
     if search_query:
         cursor.execute('''
-            SELECT id, name, country, region, year, grape_variety, price, notes, date_added, shelf_number, position_in_shelf 
+            SELECT id, name, country, region, year, grape_variety, price, notes, date_added, shelf_number, position_in_shelf, wine_type
             FROM wines 
             WHERE name LIKE ? OR country LIKE ? OR region LIKE ? OR grape_variety LIKE ?
             ORDER BY date_added DESC
         ''', (f'%{search_query}%', f'%{search_query}%', f'%{search_query}%', f'%{search_query}%'))
     else:
         cursor.execute('''
-            SELECT id, name, country, region, year, grape_variety, price, notes, date_added, shelf_number, position_in_shelf 
+            SELECT id, name, country, region, year, grape_variety, price, notes, date_added, shelf_number, position_in_shelf, wine_type
             FROM wines 
             ORDER BY date_added DESC
         ''')
@@ -122,12 +129,13 @@ def api_shelf_wines(shelf_number):
             'grape_variety': wine[5],
             'price': wine[6],
             'notes': wine[7],
-            'position': None
+            'position': None,
+            'type': wine[11]
         }
         
         # 위치 정보가 있는 경우 추가 (컬럼 개수 확인)
         if len(wine) > 9:
-            wine_dict['position'] = wine[9]
+            wine_dict['position'] = wine[10]
         
         wine_list.append(wine_dict)
     
@@ -191,6 +199,7 @@ def add_wine():
         notes = request.form['notes']
         shelf_number = request.form.get('shelf_number') or None
         position_in_shelf = request.form.get('position_in_shelf') or None
+        wine_type = request.form['type']
         
         conn = sqlite3.connect('wine_cellar.db')
         cursor = conn.cursor()
@@ -208,9 +217,9 @@ def add_wine():
                 return render_template('add.html')
         
         cursor.execute('''
-            INSERT INTO wines (name, country, region, year, grape_variety, price, notes, date_added, shelf_number, position_in_shelf)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (name, country, region, year, grape_variety, price, notes, datetime.now().strftime('%Y-%m-%d'), shelf_number, position_in_shelf))
+            INSERT INTO wines (name, country, region, year, grape_variety, price, notes, date_added, shelf_number, position_in_shelf,wine_type)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (name, country, region, year, grape_variety, price, notes, datetime.now().strftime('%Y-%m-%d'), shelf_number, position_in_shelf,wine_type))
         
         conn.commit()
         conn.close()
@@ -238,6 +247,7 @@ def edit_wine(wine_id):
         notes = request.form['notes']
         shelf_number = request.form.get('shelf_number') or None
         position_in_shelf = request.form.get('position_in_shelf') or None
+        wine_type = request.form['type']
         
         # 위치가 이미 사용 중인지 확인 (현재 와인 제외)
         if shelf_number and position_in_shelf:
@@ -255,9 +265,9 @@ def edit_wine(wine_id):
         
         cursor.execute('''
             UPDATE wines 
-            SET name=?, country=?, region=?, year=?, grape_variety=?, price=?, notes=?, shelf_number=?, position_in_shelf=?
+            SET name=?, country=?, region=?, year=?, grape_variety=?, price=?, notes=?, shelf_number=?, position_in_shelf=?,wine_type=?
             WHERE id=?
-        ''', (name, country, region, year, grape_variety, price, notes, shelf_number, position_in_shelf, wine_id))
+        ''', (name, country, region, year, grape_variety, price, notes, shelf_number, position_in_shelf,wine_type, wine_id))
         
         conn.commit()
         conn.close()
@@ -289,14 +299,19 @@ def delete_wine(wine_id):
     flash('와인이 성공적으로 삭제되었습니다!', 'success')
     return redirect(url_for('index'))
 
+
+load_dotenv()
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         
-        # 간단한 하드코딩된 인증 (실제로는 데이터베이스 사용 권장)
-        if (username == 'mom' or username=='dad' or username=='son' or username=='daughter') and password == '1258':
+        allowed_usernames = os.getenv('ADMIN_USERNAME', '').split(',')
+        admin_password = os.getenv('ADMIN_PASSWORD', '')
+
+        if username in allowed_usernames and password == admin_password:
             session['logged_in'] = True
             session['username'] = username
             flash('로그인 성공!', 'success')

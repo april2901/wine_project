@@ -49,45 +49,53 @@
     {% if wines %}
         <div class="wine-grid">
             {% for wine in wines %}
-            <div class="wine-card">
-                <div class="wine-name">{{ wine[1] }}</div>
-                
-                <div class="wine-details">
-                    <div class="wine-info">
-                        <span class="info-label">국가:</span> {{ wine[2] or 'N/A' }} | 
-                        <span class="info-label">지역:</span> {{ wine[3] or 'N/A' }}
-                    </div>
-                    <div class="wine-info">
-                        <span class="info-label">연도:</span> {{ wine[4] or 'N/A' }} | 
-                        <span class="info-label">품종:</span> {{ wine[5] or 'N/A' }}
+                {% if wine[11] == 1 %}
+                <div class="wine-card-red">
+                {% elif wine[11] == 2 %}
+                <div class="wine-card-white">
+                {% elif wine[11] == 3 %}
+                <div class="wine-card-sparkling">
+                {% else %}
+                <div class="wine-card">
+                {% endif %}
+                    <div class="wine-name">{{ wine[1] }}</div>
+                    
+                    <div class="wine-details">
+                        <div class="wine-info">
+                            <span class="info-label">국가:</span> {{ wine[2] or 'N/A' }} | 
+                            <span class="info-label">지역:</span> {{ wine[3] or 'N/A' }}
+                        </div>
+                        <div class="wine-info">
+                            <span class="info-label">연도:</span> {{ wine[4] or 'N/A' }} | 
+                            <span class="info-label">품종:</span> {{ wine[5] or 'N/A' }}
+                        </div>
+                        
+                        {% if wine[6] %}
+                        <div class="wine-price">{{ "{:,}".format(wine[6]|int) }}원</div>
+                        {% endif %}
+                        
+                        <!-- 위치 정보 표시 -->
+                        {% if wine|length > 9 and wine[9] %}
+                        <div class="wine-location">
+                            <span class="info-label">위치:</span> 
+                            선반 {{ wine[9] }}
+                            {% if wine[10] %} - 위치 {{ wine[10] }}{% endif %}
+                        </div>
+                        {% endif %}
                     </div>
                     
-                    {% if wine[6] %}
-                    <div class="wine-price">{{ "{:,}".format(wine[6]|int) }}원</div>
+                    {% if wine[7] %}
+                    <div class="wine-note">"{{ wine[7] }}"</div>
                     {% endif %}
                     
-                    <!-- 위치 정보 표시 -->
-                    {% if wine|length > 9 and wine[9] %}
-                    <div class="wine-location">
-                        <span class="info-label">위치:</span> 
-                        선반 {{ wine[9] }}
-                        {% if wine[10] %} - 위치 {{ wine[10] }}{% endif %}
+                    <div class="wine-date">추가일: {{ wine[8] }}</div>
+                    
+                    {% if session.logged_in %}
+                    <div class="actions">
+                        <a href="{{ url_for('edit_wine', wine_id=wine[0]) }}" class="edit-link">수정</a>
+                        <a href="#" onclick="deleteWine('{{ wine[0] }}')" class="delete-link">삭제</a>
                     </div>
                     {% endif %}
-                </div>
-                
-                {% if wine[7] %}
-                <div class="wine-note">"{{ wine[7] }}"</div>
-                {% endif %}
-                
-                <div class="wine-date">추가일: {{ wine[8] }}</div>
-                
-                {% if session.logged_in %}
-                <div class="actions">
-                    <a href="{{ url_for('edit_wine', wine_id=wine[0]) }}" class="edit-link">수정</a>
-                    <a href="#" onclick="deleteWine('{{ wine[0] }}')" class="delete-link">삭제</a>
-                </div>
-                {% endif %}
             </div>
             {% endfor %}
         </div>

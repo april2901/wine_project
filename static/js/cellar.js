@@ -72,8 +72,14 @@ function displayShelfWines(wines, shelfNumber) {
             </div>
         ` : '';
         
+        const wineType = wine.type;
+        let wineCardClass = 'shelf-wine-card';
+        if (wineType === 1) wineCardClass = 'shelf-wine-card-red';
+        else if (wineType === 2) wineCardClass = 'shelf-wine-card-white';
+        else if (wineType === 3) wineCardClass = 'shelf-wine-card-sparkling';
+
         html += `
-            <div class="shelf-wine-card">
+            <div class="${wineCardClass}">
                 ${wine.position ? `<div class="position-badge">위치 ${wine.position}</div>` : ''}
                 <div class="wine-name">${wine.name}</div>
                 <div class="wine-info">
